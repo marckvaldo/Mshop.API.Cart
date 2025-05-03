@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "yxYtYcurmtw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Data\\Mshop.Infra.GRPc\\Mshop.Infra.Consumer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\fluentvalidation\\11.5.1\\fluentvalidation.11.5.1.nupkg.sha512",
+    "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
+    "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.1.0\\microsoft.extensions.dependencyinjection.abstractions.2.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

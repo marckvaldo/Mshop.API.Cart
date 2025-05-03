@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.30.2" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.70.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.70.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="StackExchange.Redis" Version="2.8.22" />
+		<PackageReference Include="NRedisStack" Version="0.13.1" />
+		<PackageReference Include="Polly" Version="8.5.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Mshop.Core\Mshop.Core.csproj" />
+		
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Protobuf Include="Protos/ProductProto.proto" GrpcServices="Client" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="Protos\productProto.proto">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>
