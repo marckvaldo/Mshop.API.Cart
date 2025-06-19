@@ -9,6 +9,11 @@ using Mshop.Application.Interface;
 using Mshop.Core.DomainObject;
 using Mshop.Core.Message.DomainEvent;
 using Bogus;
+using Mshop.Application.Services.Cart.Commands.Handlers;
+using Mshop.Application.Services.Cart.Commands;
+using Mshop.Application.Services.Cart.Queries.Handlers;
+using Mshop.Application.Services.Cart.Queries;
+using Mshop.Application.Commons.DTO;
 
 namespace Mshop.UnitTests.Services
 {
@@ -19,7 +24,14 @@ namespace Mshop.UnitTests.Services
         private readonly Mock<ICustomerConsumer> _customerConsumerMock;
         private readonly Mock<INotification> _notificationMock;
         private readonly Mock<IDomainEventPublisher> _publishServiceMock;
-        private readonly CartServices _cartServices;
+        private readonly AddItemToCartHandler _addItemToCartHandler;
+        private readonly RemoveItemFromCartHandler _removeItemFromCartHandler;
+        private readonly RemoveQuantityFromCartHandler _removeQuantityFromCartHandler;
+        private readonly ClearCartHandler _clearCartHandler;
+        private readonly CheckoutHandler _checkoutHandler;
+        private readonly AddCustomerHandler _addCustomerHandler;
+        private readonly GetCartDetailsHandler _getCartDetailsQueryHandler;
+        private readonly AddPaymentHandler _addPaymentHandler;
         public CartServiceTest(): base()
         {
             _cartRepositoryMock = new Mock<ICartRepository>();
@@ -28,13 +40,46 @@ namespace Mshop.UnitTests.Services
             _notificationMock = new Mock<INotification>();
             _publishServiceMock = new Mock<IDomainEventPublisher>();
 
-            _cartServices = new CartServices(
-                _cartRepositoryMock.Object,
+            _addItemToCartHandler = new AddItemToCartHandler(
+                _cartRepositoryMock.Object, 
                 _productConsumerMock.Object,
-                _customerConsumerMock.Object,
                 _publishServiceMock.Object,
-                _notificationMock.Object
-                );
+                _notificationMock.Object);
+
+            _removeItemFromCartHandler = new RemoveItemFromCartHandler(
+                _cartRepositoryMock.Object,
+                _publishServiceMock.Object,
+                _notificationMock.Object);
+
+            _clearCartHandler = new ClearCartHandler(
+                _cartRepositoryMock.Object,
+                _publishServiceMock.Object,
+                _notificationMock.Object);
+
+            _checkoutHandler = new CheckoutHandler(
+                _cartRepositoryMock.Object, 
+                _publishServiceMock.Object, 
+                _notificationMock.Object);
+
+            _addCustomerHandler = new AddCustomerHandler(
+                _notificationMock.Object, 
+                _cartRepositoryMock.Object, 
+                _customerConsumerMock.Object,
+                _publishServiceMock.Object);
+
+            _getCartDetailsQueryHandler = new GetCartDetailsHandler(
+                _notificationMock.Object, 
+                _cartRepositoryMock.Object);
+
+            _addPaymentHandler = new AddPaymentHandler(
+                _cartRepositoryMock.Object, 
+                _publishServiceMock.Object, 
+                _notificationMock.Object);
+
+            _removeQuantityFromCartHandler = new RemoveQuantityFromCartHandler(
+                _cartRepositoryMock.Object,
+                _publishServiceMock.Object,
+                _notificationMock.Object);
 
         }
 
@@ -50,7 +95,7 @@ namespace Mshop.UnitTests.Services
             .ReturnsAsync((ProductModel)null);
 
 
-            var result = await _cartServices.AddItemToCart(Guid.Empty, Guid.NewGuid(), 1);
+            var result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(Guid.Empty, Guid.NewGuid(), 1), CancellationToken.None);
 
             Assert.False(result.IsSuccess);
             _notificationMock.Verify(x => x.AddNotifications(It.Is<string>(msg => msg == "Não foi possivel encontrar o produto")), Times.Once);
@@ -81,7 +126,8 @@ namespace Mshop.UnitTests.Services
             _cartRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Entity.Cart>(), CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
-            var result = await _cartServices.AddItemToCart(cart.Id, product.Id, 1);
+            var result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(cart.Id, product.Id, 1), CancellationToken.None);
+            
 
             Assert.True(result.IsSuccess);
             _cartRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<Entity.Cart>(), CancellationToken.None), Times.Once);
@@ -102,11 +148,14 @@ namespace Mshop.UnitTests.Services
             _cartRepositoryMock.Setup(repo => repo.GetByIdAsync(cartId))
                 .ReturnsAsync((Entity.Cart)null);
 
+            _publishServiceMock.Setup(repo => repo.PublishAsync(It.IsAny<DomainEvent>())).ReturnsAsync(true);
+
             // Act
-            var result = await _cartServices.RemoveItemFromCart(cartId, productId);
+            var result = await _removeItemFromCartHandler.Handle(new RemoveItemFromCartCommand(cartId, productId), CancellationToken.None);
 
             // Assert
             Assert.False(result);
+            _publishServiceMock.Verify(repo => repo.PublishAsync(It.IsAny<DomainEvent>()), Times.Never);
             _notificationMock.Verify(n => n.AddNotifications(It.Is<string>(msg => msg == "Não foi possivel encontrar o carrinho de compras")), Times.Once);
         }
 
@@ -126,14 +175,46 @@ namespace Mshop.UnitTests.Services
             _cartRepositoryMock.Setup(repo => repo.UpdateAsync(cart, CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
+            _publishServiceMock.Setup(repo => repo.PublishAsync(It.IsAny<DomainEvent>())).ReturnsAsync(true);
+
             // Act
-            var result = await _cartServices.RemoveItemFromCart(cart.Id, product.Id);
+            var result = await _removeItemFromCartHandler.Handle(new RemoveItemFromCartCommand(cart.Id, product.Id), CancellationToken.None);
 
             // Assert
             Assert.True(result);
             Assert.Empty(cart.Products);
             _cartRepositoryMock.Verify(repo => repo.UpdateAsync(It.Is<Entity.Cart>(c => c.Products.Count == 0), CancellationToken.None), Times.Once);
             _notificationMock.Verify(n => n.AddNotifications(It.IsAny<string>()), Times.Never);
+            _publishServiceMock.Verify(repo => repo.PublishAsync(It.IsAny<IEnumerable<DomainEvent>>()), Times.Once);
+        }
+
+        [Fact(DisplayName = nameof(RemoveQuantityItemFromCart_ShouldRemoveItem_WhenCartExists))]
+        [Trait("Services", "Cart")]
+        public async Task RemoveQuantityItemFromCart_ShouldRemoveItem_WhenCartExists()
+        {
+            // Arrange
+            var product = FakerProduct();
+            var cart = FakerCart();
+            cart.AddItem(product, 2);
+
+            _cartRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(cart);
+
+            _cartRepositoryMock.Setup(repo => repo.UpdateAsync(cart, CancellationToken.None))
+                .Returns(Task.CompletedTask);
+
+            _publishServiceMock.Setup(repo => repo.PublishAsync(It.IsAny<DomainEvent>())).ReturnsAsync(true);
+
+            // Act
+            var result = await _removeQuantityFromCartHandler.Handle(new RemoveQuantityFromCommand(cart.Id, product.Id), CancellationToken.None);
+
+            // Assert
+            Assert.True(result);
+            Assert.NotEmpty(cart.Products);
+            Assert.True(cart.Products.Any(p => p.Id == product.Id && p.Quantity == 1));
+            _cartRepositoryMock.Verify(repo => repo.UpdateAsync(It.Is<Entity.Cart>(c => c.Products.Any(p=>p.Id == product.Id && p.Quantity == 1)), CancellationToken.None), Times.Once);
+            _notificationMock.Verify(n => n.AddNotifications(It.IsAny<string>()), Times.Never);
+            _publishServiceMock.Verify(repo => repo.PublishAsync(It.IsAny<IEnumerable<DomainEvent>>()), Times.Once);
         }
 
 
@@ -152,15 +233,18 @@ namespace Mshop.UnitTests.Services
             _cartRepositoryMock.Setup(repo => repo.UpdateAsync(cart, CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
+            _publishServiceMock.Setup(repo => repo.PublishAsync(It.IsAny<DomainEvent>())).ReturnsAsync(true);
+
             // Act
-            var result = await _cartServices.ClearCart(cartId);
+            var result = await _clearCartHandler.Handle(new ClearCartCommand(cartId), CancellationToken.None);
 
             // Assert
             Assert.True(result);
             Assert.Empty(cart.Products);
             _cartRepositoryMock.Verify(repo => repo.UpdateAsync(It.Is<Entity.Cart>(c => !c.Products.Any()), CancellationToken.None), Times.Once);
             _notificationMock.Verify(n => n.AddNotifications(It.IsAny<string>()), Times.Never);
-           
+            _publishServiceMock.Verify(repo => repo.PublishAsync(It.IsAny<IEnumerable<DomainEvent>>()), Times.Once);
+
         }
 
 
@@ -183,15 +267,17 @@ namespace Mshop.UnitTests.Services
             _cartRepositoryMock.Setup(repo => repo.UpdateAsync(cart, CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
+            _publishServiceMock.Setup(repo => repo.PublishAsync(It.IsAny<DomainEvent>())).ReturnsAsync(true);
+
             // Act
-            var result = await _cartServices.AddCustomer(cart.Id, customer.Id);
+            var result = await _addCustomerHandler.Handle(new AddCustomerCommand(cart.Id, customer.Id), CancellationToken.None);
 
             // Assert
             Assert.True(result);
             _cartRepositoryMock.Verify(repo => repo.UpdateAsync(It.Is<Entity.Cart>(c => c.Customer != null), CancellationToken.None), Times.Once);
             _notificationMock.Verify(n => n.AddNotifications(It.IsAny<string>()), Times.Never);
+            _publishServiceMock.Verify(repo => repo.PublishAsync(It.IsAny<IEnumerable<DomainEvent>>()), Times.Once);
         }
-
 
 
         [Fact(DisplayName = nameof(AddItemToCart_ShouldCreateNewCart_WhenCartDoesNotExist))]
@@ -223,14 +309,17 @@ namespace Mshop.UnitTests.Services
             _cartRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Entity.Cart>(), CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
+            _publishServiceMock.Setup(repo => repo.PublishAsync(It.IsAny<DomainEvent>())).ReturnsAsync(true);
+
             // Act
-            var result = await _cartServices.AddItemToCart(Guid.Empty, product.Id, 1);
+            var result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(Guid.Empty, product.Id, 1), CancellationToken.None);
 
             // Assert
             Assert.True(result.IsSuccess);
             _cartRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Entity.Cart>(), CancellationToken.None), Times.Once);
             _cartRepositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<Entity.Cart>(), CancellationToken.None), Times.Once);
             _notificationMock.Verify(n => n.AddNotifications(It.IsAny<string>()), Times.Never);
+            _publishServiceMock.Verify(repo => repo.PublishAsync(It.IsAny<IEnumerable<DomainEvent>>()), Times.Once);
         }
 
 
@@ -245,17 +334,17 @@ namespace Mshop.UnitTests.Services
                 .ReturnsAsync(cart);
 
             // Act
-            var result = await _cartServices.GetCartDetails(cart.Id);
+            var result = await _getCartDetailsQueryHandler.Handle(new GetCartDetailsQuery(cart.Id), CancellationToken.None);  //_cartServices.GetCartDetails(cart.Id);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(cart.Id, result.Id);
-            Assert.NotNull(result.Customer);
-            Assert.Equal(cart.Customer.Id, result.Customer.Id);
-            Assert.Equal(cart.Customer.Name, result.Customer.Name);
-            Assert.Equal(cart.Customer.Email, result.Customer.Email);
-            Assert.Equal(cart.Customer.Phone, result.Customer.Phone);
-            Assert.Equal(cart.Products.Count, result.Products.Count);
+            Assert.NotNull(result.Data);
+            Assert.Equal(cart.Id, result.Data.Id);
+            Assert.NotNull(result.Data.Customer);
+            Assert.Equal(cart.Customer.Id, result.Data.Customer.Id);
+            Assert.Equal(cart.Customer.Name, result.Data.Customer.Name);
+            Assert.Equal(cart.Customer.Email, result.Data.Customer.Email);
+            Assert.Equal(cart.Customer.Phone, result.Data.Customer.Phone);
+            Assert.Equal(cart.Products.Count, result.Data.Products.Count);
 
         }
 
@@ -271,14 +360,28 @@ namespace Mshop.UnitTests.Services
             _cartRepositoryMock.Setup(repo => repo.GetByIdAsync(cart.Id))
                 .ReturnsAsync(cart);
 
+            _publishServiceMock.Setup(repo => repo.PublishAsync(It.IsAny<DomainEvent>())).ReturnsAsync(true);
+
             // Act
-            var result = await _cartServices.AddPayment(cart.Id, payment);
+            var result = await _addPaymentHandler.Handle(new AddPaymentCommand(
+                cart.Id, 
+                new PaymentDTO(
+                    payment.Amount,
+                    payment.PaymentMethod,
+                    payment.Status,
+                    payment.Installments,
+                    payment.CardToken,
+                    payment.BoletoNumber,
+                    payment.BoletoDueDate,
+                    payment.CreatedAt,
+                    payment.UpdatedAt)),CancellationToken.None); //_cartServices.AddPayment(cart.Id, payment);
 
             // Assert
             Assert.True(result);
             _cartRepositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<Entity.Cart>(), CancellationToken.None), Times.Once);
             _cartRepositoryMock.Verify(r=>r.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
             _notificationMock.Verify(n => n.AddNotifications(It.IsAny<string>()), Times.Never);
+            _publishServiceMock.Verify(repo => repo.PublishAsync(It.IsAny<IEnumerable<DomainEvent>>()), Times.Once);
             //_notificationMock.Verify(n => n.AddNotifications(It.Is<string>(msg => msg == "Não foi possivel encontrar o carrinho de compras")), Times.Once);
         }
 

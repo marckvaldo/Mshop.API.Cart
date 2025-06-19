@@ -15,7 +15,7 @@ namespace Mshop.Infra.Consumer
 {
     public static class ServiceRegistrationExtension
     {
-        public static void AddConsumer(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddConsumer(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<ICircuitBreaker, CircuitBreaker>();
 
@@ -39,9 +39,11 @@ namespace Mshop.Infra.Consumer
                 return new ServiceGRPC(options, circuitBreaker);
 
             });
+
+            return services;
         }
 
-        public static void AddCache(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCache(this IServiceCollection services, IConfiguration configuration)
         {
             try
             {
@@ -61,6 +63,8 @@ namespace Mshop.Infra.Consumer
 
             }
             catch { }
+
+            return services;
 
         }
     }

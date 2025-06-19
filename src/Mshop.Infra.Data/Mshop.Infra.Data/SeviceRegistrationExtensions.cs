@@ -17,6 +17,8 @@ namespace Mshop.Infra.Data
             var connectionString = configuration.GetConnectionString("MongoDb");
             var dataBase = configuration["ConnectionStrings:DatabaseName"];
 
+            Mapping.MapConfiguration();
+
             services.AddSingleton(new MongoDbContext(connectionString, dataBase));
             services.AddScoped<IMongoDatabase>(sp => sp.GetRequiredService<MongoDbContext>().Database);
 

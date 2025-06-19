@@ -15,7 +15,7 @@ namespace MShop.Broker.Cart.Configuration.RabbitMQ
         public string Exchange { get; set; }
         public int Port { get; set; }
         public string Vhost { get; set; }
-        public string QueueName { get; set; }
+        public string QueueOrder { get; set; }
         public bool Durable { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Mshop.Core.Message;
 using Mshop.Domain.Entity;
+using Mshop.Domain.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +68,9 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.Equal(3, cart.Products[0].Quantity);
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+            Assert.True(cart.Events.Count == 2);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            Assert.IsType<OrderItemModifiedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemModifiedEvent)).FirstOrDefault());
         }
 
         [Fact(DisplayName = nameof(Cart_ShouldRemoveQuantity))]
@@ -87,6 +91,10 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.Equal(1, cart.Products[0].Quantity);
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 2);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            Assert.IsType<OrderItemModifiedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemModifiedEvent)).FirstOrDefault());
         }
 
         [Fact(DisplayName = nameof(Cart_ShouldRemoveItemWhenQuantityIsZero))]
@@ -106,6 +114,10 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.Empty(cart.Products);
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 2);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            Assert.IsType<OrderItemRemovedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemRemovedEvent)).FirstOrDefault());
         }
 
         [Fact(DisplayName = nameof(Cart_ShouldClearAllItems))]
@@ -125,6 +137,10 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.Empty(cart.Products);
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 2);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            Assert.IsType<OrderItensRemovedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItensRemovedEvent)).FirstOrDefault());
         }
 
         [Fact(DisplayName = nameof(Cart_ShouldRemoveItemById))]
@@ -144,6 +160,10 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.Empty(cart.Products);
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 2);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            Assert.IsType<OrderItemRemovedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemRemovedEvent)).FirstOrDefault());
         }
 
         [Fact(DisplayName = nameof(Cart_ShouldReturnTotalPrice))]
@@ -169,6 +189,10 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.Equal(totalProducts, total);
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 5);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            //Assert.IsType<OrderItemRemovedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemRemovedEvent)).FirstOrDefault());
         }
 
         [Fact(DisplayName = nameof(Cart_ShouldUpdateCustomer))]
@@ -187,6 +211,9 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.Equal(customer, cart.Customer);
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 1);
+            Assert.IsType<OrderModifiedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderModifiedEvent)).FirstOrDefault());
         }
 
         [Fact(DisplayName = nameof(Cart_ShouldAddPayment))]
@@ -210,6 +237,10 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.False(_notification.HasErrors());
             Assert.Equal(cart.GetAmount(), payment.Amount);
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 4);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            Assert.IsType<OrderModifiedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderModifiedEvent)).FirstOrDefault());
         }
 
 
@@ -235,6 +266,10 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
             Assert.True(_notification.HasErrors());
             Assert.Equal(cart.GetAmount(), payment.Amount);
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 4);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+            Assert.IsType<OrderModifiedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderModifiedEvent)).FirstOrDefault());
         }
 
 
@@ -250,12 +285,16 @@ namespace Mshop.UnitTests.Domain.Entity.Cart
                 cart.AddItem(item, 1);
             }
 
-            cart.UpdateStatus(CartStatus.CheckoutCompleted);
+            cart.Checkout();
             cart.IsValid(_notification);
             // Assert
             Assert.True(_notification.HasErrors());
             Assert.NotEqual(cart.GetAmount(), cart.GetTotal());
             Assert.Equal(cart.Status, CartStatus.PendingCheckout);
+
+            Assert.True(cart.Events.Count == 3);
+            Assert.IsType<OrderItemAddedEvent>(cart.Events.Where(c => c.EventName == nameof(OrderItemAddedEvent)).FirstOrDefault());
+
         }
 
 

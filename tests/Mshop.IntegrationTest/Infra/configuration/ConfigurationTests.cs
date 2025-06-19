@@ -28,7 +28,7 @@ namespace Mshop.IntegrationTest.Infra.configuration
         public const string ExchangeRabbitMQ = "orders.Events";
         public const string PortRabbitMQ = "5672";
         public const string VhostRabbitMQ = "Mshop";
-        public const string QueueOrderRabbitMQ = "history.V1.order";
+        public const string QueueOrderRabbitMQ = "order.processing.V1";
         public const bool DurableRabbitMQ = true;
 
     }

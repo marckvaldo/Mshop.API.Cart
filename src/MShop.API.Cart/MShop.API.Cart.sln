@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MShop.API.Cart", "MShop.API.Cart.csproj", "{66589A77-56DD-42C7-8972-791CC5539D3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mshop.API.Cart", "Mshop.API.Cart.csproj", "{66589A77-56DD-42C7-8972-791CC5539D3D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{62172F92-8D68-463A-9F16-8D49CEFB1AC2}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mshop.Domain", "..\Mshop.Domain\Mshop.Domain.csproj", "{2C6A7AB1-F37B-4B9E-BCB9-FDC84210EF24}"
 EndProject
@@ -26,6 +29,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mshop.Infra.Consumer", "..\Mshop.Infra.Consumer\Mshop.Infra.Consumer.csproj", "{9FD01BAD-12B9-481C-99C5-3613FF9699CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MShop.Broker.Cart", "..\MShop.Broker.Cart\MShop.Broker.Cart.csproj", "{BD1F88A8-DC18-448B-87FE-37A0510C5AD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mshop.E2ETests", "..\..\tests\Mshop.E2ETests\Mshop.E2ETests.csproj", "{0EDAB1CE-A965-4F4D-8753-EA76DA51C533}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +78,10 @@ Global
 		{BD1F88A8-DC18-448B-87FE-37A0510C5AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD1F88A8-DC18-448B-87FE-37A0510C5AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD1F88A8-DC18-448B-87FE-37A0510C5AD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EDAB1CE-A965-4F4D-8753-EA76DA51C533}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EDAB1CE-A965-4F4D-8753-EA76DA51C533}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EDAB1CE-A965-4F4D-8753-EA76DA51C533}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EDAB1CE-A965-4F4D-8753-EA76DA51C533}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,5 +97,6 @@ Global
 		{F7E67880-66EF-47B8-8A41-824E24B96C9E} = {29E6AEEF-3471-40EE-9CDB-945F88F6D71B}
 		{9FD01BAD-12B9-481C-99C5-3613FF9699CE} = {62172F92-8D68-463A-9F16-8D49CEFB1AC2}
 		{BD1F88A8-DC18-448B-87FE-37A0510C5AD6} = {62172F92-8D68-463A-9F16-8D49CEFB1AC2}
+		{0EDAB1CE-A965-4F4D-8753-EA76DA51C533} = {29E6AEEF-3471-40EE-9CDB-945F88F6D71B}
 	EndGlobalSection
 EndGlobal

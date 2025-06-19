@@ -1,17 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MShop.Broker.Cart\MShop.Broker.Cart.csproj" />
-    <ProjectReference Include="..\Mshop.Core\Mshop.Core.csproj" />
-    <ProjectReference Include="..\Mshop.Domain\Mshop.Domain.csproj" />
-    <ProjectReference Include="..\Mshop.Infra.Consumer\Mshop.Infra.Consumer.csproj" />
-    <ProjectReference Include="..\Mshop.Infra.Data\Mshop.Infra.Data\Mshop.Infra.Data.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.1.1" />
+    </ItemGroup>
+	
+    <ItemGroup>
+        <ProjectReference Include="..\MShop.Broker.Cart\MShop.Broker.Cart.csproj" />
+        <ProjectReference Include="..\Mshop.Core\Mshop.Core.csproj" />
+        <ProjectReference Include="..\Mshop.Domain\Mshop.Domain.csproj" />
+        <ProjectReference Include="..\Mshop.Infra.Consumer\Mshop.Infra.Consumer.csproj" />
+        <ProjectReference Include="..\Mshop.Infra.Data\Mshop.Infra.Data\Mshop.Infra.Data.csproj" />
+    </ItemGroup>
 
 </Project>

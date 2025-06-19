@@ -1,11 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Mshop.Application.Interface;
 using Mshop.Application.Services.Cart;
+using Mshop.Application.Services.Cart.Commands;
+using Mshop.Application.Services.Cart.Commands.Handlers;
+using Mshop.Application.Services.Cart.Queries;
+using Mshop.Application.Services.Cart.Queries.Handlers;
 using Mshop.Core.Message;
 using Mshop.Core.Message.DomainEvent;
 using Mshop.Domain.Event;
 using Mshop.Infra.Data.Interface;
 using Mshop.IntegrationTest.Common.Persistence.RabbitMQ;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Intrinsics.Arm;
 using GRPc = Mshop.Infra.Consumer.DTOs;
 
@@ -20,7 +25,15 @@ public class CartServiceTest : CartServiceTestFixture
     private readonly IDomainEventPublisher _publishService;
     private readonly RabbitMQPersistence _rabbitMQPersistence;
 
-    private readonly CartServices _cartServices;
+    private readonly AddItemToCartHandler _addItemToCartHandler;
+    private readonly RemoveItemFromCartHandler _removeItemFromCartHandler;
+    private readonly RemoveQuantityFromCartHandler _removeQuantityFromCartHandler;
+    private readonly ClearCartHandler _clearCartHandler;
+    private readonly CheckoutHandler _checkoutHandler;
+    private readonly AddCustomerHandler _addCustomerHandler;
+    private readonly GetCartDetailsHandler _getCartDetailsQueryHandler;
+    private readonly AddPaymentHandler _addPaymentHandler;
+
     public CartServiceTest(): base()
     {
         _cartRepository = _serviceProvider.GetRequiredService<ICartRepository>();
@@ -30,13 +43,16 @@ public class CartServiceTest : CartServiceTestFixture
         _publishService = _serviceProvider.GetRequiredService<IDomainEventPublisher>();
         _rabbitMQPersistence = new RabbitMQPersistence(_serviceProvider);
 
-        _cartServices = new CartServices(
-            _cartRepository,
-            _productConsumer,
-            _customerConsumer,
-            _publishService,
-            _notification
-            );
+        //cartServices = new CartServices(_cartRepository, _productConsumer, _customerConsumer, _publishService, _notification);
+        _addItemToCartHandler = new AddItemToCartHandler(_cartRepository, _productConsumer, _publishService, _notification);
+        _removeQuantityFromCartHandler = new RemoveQuantityFromCartHandler(_cartRepository, _publishService, _notification);
+        _removeItemFromCartHandler = new RemoveItemFromCartHandler(_cartRepository,_publishService, _notification);
+        _clearCartHandler = new ClearCartHandler(_cartRepository, _publishService, _notification);
+        _checkoutHandler = new CheckoutHandler(_cartRepository,_publishService, _notification);
+        _addCustomerHandler = new AddCustomerHandler(_notification, _cartRepository, _customerConsumer, _publishService);
+        _getCartDetailsQueryHandler = new GetCartDetailsHandler(_notification, _cartRepository);
+        _addPaymentHandler = new AddPaymentHandler(_cartRepository, _publishService, _notification);
+
 
         ClearDataBase().Wait();
 
@@ -49,7 +65,7 @@ public class CartServiceTest : CartServiceTestFixture
     public async void AddItemToCart_ShouldReturnFalse_WhenProductNotFound()
     {
 
-        var result = await _cartServices.AddItemToCart(Guid.Empty, Guid.NewGuid(), 1);
+        var result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(Guid.Empty, Guid.NewGuid(), 1),CancellationToken.None);
 
         Assert.False(result.IsSuccess);
         Assert.True(_notification.HasErrors());
@@ -60,14 +76,14 @@ public class CartServiceTest : CartServiceTestFixture
     [Trait("Integration - Application", "Service Cart")]
     public async Task AddItemToCartWithCartId_ShouldAddProduct_WhenValid()
     {
-        PersistirProcutsMysql();
+        PersistirProcutsDataBase();
         var products = await GetAllProductsMysqlAsync();
         var product = products.FirstOrDefault();
 
         var cart = FakerCart();
         
 
-        var result = await _cartServices.AddItemToCart(cart.Id, product.Id, 1);
+        var result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(cart.Id, product.Id, 1),CancellationToken.None);
         var cartDataBase = _cartRepository.GetByIdAsync(cart.Id).Result;
 
         Assert.True(result.IsSuccess);
@@ -107,14 +123,14 @@ public class CartServiceTest : CartServiceTestFixture
     [Trait("Integration - Application", "Service Cart")]
     public async Task AddItemToCartWithOutCartId_ShouldAddProduct_WhenValid()
     {
-        PersistirProcutsMysql();
+        PersistirProcutsDataBase();
         var products = await GetAllProductsMysqlAsync();
         var product = products.FirstOrDefault();
 
         var cart = FakerCart();
 
 
-        var result = await _cartServices.AddItemToCart(Guid.Empty, product.Id, 1);
+        var result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(Guid.Empty, product.Id, 1),CancellationToken.None);
         var cartDataBase = _cartRepository.GetByIdAsync(result.Data.Id).Result;
 
         Assert.True(result.IsSuccess);
@@ -149,6 +165,54 @@ public class CartServiceTest : CartServiceTestFixture
     }
 
 
+    [Fact(DisplayName = nameof(AddItemToCartWhenHasItem_ShouldAddProduct_WhenValid))]
+    [Trait("Integration - Application", "Service Cart")]
+    public async Task AddItemToCartWhenHasItem_ShouldAddProduct_WhenValid()
+    {
+        PersistirProcutsDataBase();
+        var products = await GetAllProductsMysqlAsync();
+        var product = products.FirstOrDefault();
+
+        var cart = FakerCart();
+
+
+        var result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(Guid.Empty, product.Id, 1), CancellationToken.None);
+        result = await _addItemToCartHandler.Handle(new AddItemToCartCommand(result.Data.Id, product.Id, 1), CancellationToken.None);
+        var cartDataBase = _cartRepository.GetByIdAsync(result.Data.Id).Result;
+
+        Assert.True(result.IsSuccess);
+        Assert.False(_notification.HasErrors());
+        Assert.NotNull(cartDataBase);
+        Assert.NotNull(result.Data);
+        Assert.True(cartDataBase.Products.Count > 0);
+        Assert.Equal(cartDataBase.Id,result.Data.Id);
+
+        var productBase = cartDataBase.Products.FirstOrDefault(p => p.Id == product.Id);
+        var productResult = result.Data.Products.FirstOrDefault(p => p.Id == product.Id);
+
+        Assert.Equal(productBase.Quantity, 2);
+        Assert.Equal(productBase.Name, productResult.Name);
+        Assert.Equal(productBase.Price, productResult.Price);
+        Assert.Equal(productBase.CategoryId, productResult.CategoryId);
+        Assert.Equal(productBase.CategoryId, productResult.CategoryId);
+        Assert.Equal(productBase.Thumb, productResult.Thumb);
+        Assert.Equal(productBase.Description, productResult.Description);
+        Assert.Equal(productBase.IsSale, productResult.IsSale);
+        Assert.Equal(productBase.Id, productResult.Id);
+
+        Assert.Equal(productBase.Id, product.Id);
+        Assert.Equal(productBase.Quantity, 2);
+        Assert.Equal(productBase.Name, product.Name);
+        Assert.Equal(productBase.Price, product.Price);
+        Assert.Equal(productBase.CategoryId, product.CategoryId);
+        Assert.Equal(productBase.Thumb, product.Thumb);
+        Assert.Equal(productBase.Description, product.Description);
+        Assert.Equal(productBase.IsSale, product.IsSale);
+
+
+    }
+
+
 
     [Fact(DisplayName = nameof(RemoveItemFromCart_ShouldReturnFalse_WhenCartNotFound))]
     [Trait("Integration - Application", "Service Cart")]
@@ -158,9 +222,9 @@ public class CartServiceTest : CartServiceTestFixture
         var cartId = Guid.NewGuid();
         var productId = Guid.NewGuid();
 
-       
+
         // Act
-        var result = await _cartServices.RemoveItemFromCart(cartId, productId);
+        var result = await _removeItemFromCartHandler.Handle(new RemoveItemFromCartCommand(cartId, productId), CancellationToken.None); //_cartServices.RemoveItemFromCart(cartId, productId);
 
         // Assert
         Assert.False(result);
@@ -181,7 +245,7 @@ public class CartServiceTest : CartServiceTestFixture
 
 
         // Act
-        var result = await _cartServices.RemoveItemFromCart(cart.Id, product.Id);
+        var result = await _removeItemFromCartHandler.Handle(new RemoveItemFromCartCommand(cart.Id, product.Id),CancellationToken.None);
         var carDataBase = _cartRepository.GetByIdAsync(cart.Id).Result;
 
         // Assert
@@ -202,9 +266,8 @@ public class CartServiceTest : CartServiceTestFixture
 
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
-
         // Act
-        var result = await _cartServices.RemoveQuantityFromCart(cart.Id, product.Id);
+        var result = await _removeQuantityFromCartHandler.Handle(new RemoveQuantityFromCommand(cart.Id, product.Id),CancellationToken.None);
         var carDataBase = _cartRepository.GetByIdAsync(cart.Id).Result;
 
         // Assert
@@ -226,7 +289,7 @@ public class CartServiceTest : CartServiceTestFixture
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
         // Act
-        var result = await _cartServices.ClearCart(cart.Id);
+        var result = await _clearCartHandler.Handle(new ClearCartCommand(cart.Id), CancellationToken.None); //_cartServices.ClearCart(cart.Id);
         var cartBase = await _cartRepository.GetByIdAsync(cart.Id);
         // Assert
         Assert.True(result);
@@ -265,19 +328,20 @@ public class CartServiceTest : CartServiceTestFixture
         // Arrange            
         var cart = FakerCart(true,true);
         await _cartRepository.AddAsync(cart,CancellationToken.None);
-       
+
         // Act
-        var result = await _cartServices.GetCartDetails(cart.Id);
+        var result = await _getCartDetailsQueryHandler.Handle(new GetCartDetailsQuery(cart.Id), CancellationToken.None);//_cartServices.GetCartDetails(cart.Id);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(cart.Id, result.Id);
-        Assert.NotNull(result.Customer);
-        Assert.Equal(cart.Customer.Id, result.Customer.Id);
-        Assert.Equal(cart.Customer.Name, result.Customer.Name);
-        Assert.Equal(cart.Customer.Email, result.Customer.Email);
-        Assert.Equal(cart.Customer.Phone, result.Customer.Phone);
-        Assert.Equal(cart.Products.Count, result.Products.Count);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(cart.Id, result.Data.Id);
+        Assert.NotNull(result.Data.Customer);
+        Assert.Equal(cart.Customer.Id, result.Data.Customer.Id);
+        Assert.Equal(cart.Customer.Name, result.Data.Customer.Name);
+        Assert.Equal(cart.Customer.Email, result.Data.Customer.Email);
+        Assert.Equal(cart.Customer.Phone, result.Data.Customer.Phone);
+        Assert.Equal(cart.Products.Count, result.Data.Products.Count);
         Assert.False(_notification.HasErrors());
 
     }
@@ -295,7 +359,7 @@ public class CartServiceTest : CartServiceTestFixture
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
 
-        var result = await _cartServices.AddPayment(cart.Id, payment);
+        var result = await _addPaymentHandler.Handle(new AddPaymentCommand(cart.Id, PaymentToPaymamentDTO(payment)), CancellationToken.None); //_cartServices.AddPayment(cart.Id, payment);
 
         Assert.False(result);
         Assert.True(_notification.HasErrors());
@@ -315,7 +379,7 @@ public class CartServiceTest : CartServiceTestFixture
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
 
-        var result = await _cartServices.AddPayment(cart.Id, payment);
+        var result = await _addPaymentHandler.Handle(new AddPaymentCommand(cart.Id, PaymentToPaymamentDTO(payment)), CancellationToken.None);
 
         Assert.True(result);
         Assert.False(_notification.HasErrors());
@@ -334,7 +398,7 @@ public class CartServiceTest : CartServiceTestFixture
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
 
-        var result = await _cartServices.Checkout(cart.Id);
+        var result = await _checkoutHandler.Handle(new CheckoutCommand(cart.Id), CancellationToken.None); //_cartServices.Checkout(cart.Id);
         var cartBase = _cartRepository.GetByIdAsync(cart.Id).Result;
 
         Assert.False(result);
@@ -355,7 +419,7 @@ public class CartServiceTest : CartServiceTestFixture
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
 
-        var result = await _cartServices.Checkout(cart.Id);
+        var result = await _checkoutHandler.Handle(new CheckoutCommand(cart.Id), CancellationToken.None);
         var cartBase = _cartRepository.GetByIdAsync(cart.Id).Result;
 
         Assert.False(result);
@@ -374,7 +438,7 @@ public class CartServiceTest : CartServiceTestFixture
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
 
-        var result = await _cartServices.Checkout(cart.Id);
+        var result = await _checkoutHandler.Handle(new CheckoutCommand(cart.Id), CancellationToken.None);
         var cartBase = _cartRepository.GetByIdAsync(cart.Id).Result;
 
         Assert.False(result);
@@ -392,19 +456,20 @@ public class CartServiceTest : CartServiceTestFixture
 
         await _cartRepository.AddAsync(cart, CancellationToken.None);
 
-        var result = await _cartServices.Checkout(cart.Id);
+        var result = await _checkoutHandler.Handle(new CheckoutCommand(cart.Id), CancellationToken.None);
         var cartBase = _cartRepository.GetByIdAsync(cart.Id).Result;
 
         //aqui eu preciso ler o rabbitMQ para verificar se a messagem chegou no broker
-        var (message, quantity)  =  await _rabbitMQPersistence.ReadMessageFromRabbitMQAutoAck<OrderCreateEvent>();
+        var (message, quantity)  =  await _rabbitMQPersistence.ReadMessageFromRabbitMQAutoAck<OrderCreateEventDTO>();
         
 
         Assert.True(result);
         Assert.False(_notification.HasErrors());
         Assert.Equal(cartBase.Status, Domain.Entity.CartStatus.CheckoutCompleted);
         Assert.NotNull(message);
-        Assert.True(quantity > 0);
+        
 
+        Assert.Equal("OrderCheckoutedEvent", message.EventName);
         Assert.Equal(cartBase.Customer.Id, message.Customer.Id);
         Assert.Equal(cartBase.Customer.Name, message.Customer.Name);
         Assert.Equal(cartBase.Customer.Email, message.Customer.Email);
@@ -419,6 +484,7 @@ public class CartServiceTest : CartServiceTestFixture
         Assert.Equal(cartBase.Version, message.Version);
         Assert.Equal(cartBase.Id, message.Id);
         Assert.Equal(cartBase.Products.Count, message.Products.Count);
+        Assert.Equal(cartBase.processedEvent, true);
 
         var produtosBase = cartBase.Products.ToList();
         foreach(var item in produtosBase)

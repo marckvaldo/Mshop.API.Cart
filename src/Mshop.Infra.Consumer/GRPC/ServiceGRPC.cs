@@ -31,9 +31,7 @@ namespace Mshop.Infra.Consumer.GRPC
                 ex =>
                 {
                     return ex is Grpc.Core.RpcException || ex is TimeoutException || ex is Exception;
-                },
-                1,
-                TimeSpan.FromMinutes(1)
+                },1,TimeSpan.FromMinutes(1)
                 );
         }
 
@@ -42,45 +40,7 @@ namespace Mshop.Infra.Consumer.GRPC
             throw new NotImplementedException();
         }
         public async Task<ProductModel?> GetProductByIdAsync(Guid productId)
-        {
-            //try
-            //{
-            // Create a channel to the gRPC endpoint
-            /*using var channel = GrpcChannel.ForAddress(_grpcEndpointProduct);
-
-            // Create a gRPC client
-            var client = new ProductProto.ProductProtoClient(channel);
-
-            // Prepare the request
-            var request = new GetProductRequest { Id = productId.ToString() };
-
-            // Call the gRPC service
-            var response = await client.GetProductByIdAsync(request);
-
-            // Handle the response
-            if (response.Success)
-            {
-                return new ProductModel(Guid.Parse(response.Data.Id),
-                    response.Data.Description,
-                    response.Data.Name,
-                    ((decimal)response.Data.Price),
-                    response.Data.IsPromotion,
-                    Guid.Parse(response.Data.CategoryId),
-                    response.Data.Category,
-                    response.Data.Thumb);
-            }
-
-            // Log or handle errors if needed
-            // For now, just returning null on failure
-            return null;*/
-            /*}
-            catch (Exception ex)
-            {
-                // Log the exception (use a logging framework here)
-                Console.WriteLine($"Error calling gRPC service: {ex.Message}");
-                return null;
-            }*/
-            
+        {   
             try
             {
                 return await _circuitBreaker.ExecuteActionAsync(async () => await GetProductByIdGRPC(productId));
@@ -96,7 +56,6 @@ namespace Mshop.Infra.Consumer.GRPC
                 return null;
             }
 
-            //return await GetProductByIdGRPC(productId);
         }
 
         private async Task<ProductModel?> GetProductByIdGRPC(Guid productId)

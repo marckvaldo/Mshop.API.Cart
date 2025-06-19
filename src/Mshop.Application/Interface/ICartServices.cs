@@ -11,13 +11,13 @@ namespace Mshop.Application.Interface
 {
     public interface ICartServices
     {
-        Task<Result<CartDTO>> AddItemToCart(Guid cartId, Guid productId, int quantity);
+        Task<Result<CartResponse>> AddItemToCartAsync(Guid cartId, Guid productId, int quantity, CancellationToken cancellationToken);
         Task<bool> RemoveItemFromCart(Guid cartId, Guid productId);
         Task<bool> RemoveQuantityFromCart(Guid cartId, Guid productId);
         Task<bool> ClearCart(Guid cartId);
         Task<bool> AddCustomer(Guid cartId, Guid CustomerId);
         Task<bool> AddAddressToCart(Guid cartId, AddressDTO address);
-        Task<CartDTO> GetCartDetails(Guid cartId);
-        Task<CartDTO> GetCartByCustomer(Guid customerId);
+        Task<CartResponse> GetCartDetails(Guid cartId, CancellationToken cancellationToken);
+        Task<CartResponse> GetCartByCustomerId(Guid customerId, CancellationToken cancellationToken);
     }
 }

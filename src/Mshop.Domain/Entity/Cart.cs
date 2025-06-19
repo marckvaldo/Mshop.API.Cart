@@ -1,4 +1,5 @@
 ﻿using Mshop.Core.DomainObject;
+using Mshop.Domain.Event;
 using Mshop.Domain.Validation;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,11 @@ namespace Mshop.Domain.Entity
         public DateTime UpdatedAt { get; private set; }
         public CartStatus Status { get; private set; }
         public string Version { get; private set; } = "1.0.0";
+        public bool processedEvent { get; private set; } = false;
 
-        private List<string> _notifications { get; set; }
+        private List<string> _notifications { get; set; } = new List<string>();
 
-        public Cart(Guid id)
+        public Cart(Guid id) : base()
         {
             Products = new List<Product>();
             Payments = new List<Payment>();
@@ -29,7 +31,7 @@ namespace Mshop.Domain.Entity
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
             
-            if(id != Guid.Empty)
+            if(id != Guid.Empty && id != default)
                 AddId(id);
 
             Status = CartStatus.PendingCheckout;
@@ -41,7 +43,7 @@ namespace Mshop.Domain.Entity
         {
             _notifications = new List<string>();
         }
-
+        
        
         public void AddItem(Product product, int quantity)
         {
@@ -55,11 +57,13 @@ namespace Mshop.Domain.Entity
             if (existingItem != null)
             {
                 existingItem.UpdateQuantity(existingItem.Quantity + quantity);
+                RegisterEvent(new OrderItemModifiedEvent(this));
             }
             else
             {
                 product.UpdateQuantity(quantity);
                 Products.Add(product);
+                RegisterEvent(new OrderItemAddedEvent(this));
             }
             UpdatedAt = DateTime.UtcNow;
         }
@@ -69,12 +73,16 @@ namespace Mshop.Domain.Entity
             var item = Products.FirstOrDefault(i => i.Id == productId);
             if (item != null)
             {
-                if(item.Quantity == 1)
+                if (item.Quantity == 1)
                 {
                     Products.Remove(item);
+                    RegisterEvent(new OrderItemRemovedEvent(this));
                 }
-                else 
+                else
+                {
                     item.UpdateQuantity(item.Quantity - 1);
+                    RegisterEvent(new OrderItemModifiedEvent(this));
+                }
             }
 
             UpdatedAt = DateTime.UtcNow;
@@ -84,6 +92,7 @@ namespace Mshop.Domain.Entity
         {
             Products.Clear();
             UpdatedAt = DateTime.UtcNow;
+            RegisterEvent(new OrderItensRemovedEvent(this));
         }
 
         public void RemoveItem(Guid productId)
@@ -93,6 +102,7 @@ namespace Mshop.Domain.Entity
             {
                 Products.Remove(item);
                 UpdatedAt = DateTime.UtcNow;
+                RegisterEvent(new OrderItemRemovedEvent(this));
             }
         }
         
@@ -118,7 +128,7 @@ namespace Mshop.Domain.Entity
 
             Customer = customer;
             UpdatedAt = DateTime.UtcNow;
-
+            RegisterEvent(new OrderModifiedEvent(this));
             return true;
         }
 
@@ -127,9 +137,12 @@ namespace Mshop.Domain.Entity
             if(payment == null)
                 return false;
 
+            if(payment.Amount <= 0)
+                return false;
+
             Payments.Add(payment);
             UpdatedAt = DateTime.UtcNow;
-
+            RegisterEvent(new OrderModifiedEvent(this));
             return true;
         }
 
@@ -182,9 +195,11 @@ namespace Mshop.Domain.Entity
 
         }
 
-        public bool UpdateStatus(CartStatus status)
+        public bool Checkout()
         {
-            if(Status == CartStatus.CheckoutCompleted)
+            var status = CartStatus.CheckoutCompleted;
+
+            if (Status == CartStatus.CheckoutCompleted)
             {
                 _notifications.Add("Não é possivel alterar o status do carrinho pois ja foi feito o chekout");
                 return false;
@@ -210,7 +225,16 @@ namespace Mshop.Domain.Entity
 
             Status = status;
             UpdatedAt = DateTime.UtcNow;
+
+            if (status == CartStatus.CheckoutCompleted)
+                RegisterEvent(new OrderCheckoutedEvent(this));
+
             return true;
+        }
+
+        public void ConfirmEvent()
+        {
+           processedEvent = true;
         }
 
     }

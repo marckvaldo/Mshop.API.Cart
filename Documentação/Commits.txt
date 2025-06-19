@@ -1,0 +1,14 @@
+feat Para novas funcionalidades.
+
+fix Para correções de bugs.
+
+chore Para tarefas de manutenção (ex configuração de dependências).
+
+refactor Para mudanças na estrutura do código sem alterar funcionalidades.
+
+docs Para alterações na documentação.
+
+test Para adicionar ou corrigir testes.
+
+style Alterações relacionadas à formatação do código.
+

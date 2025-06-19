@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Mshop.Core.DomainObject;
+using Mshop.Domain.Event;
 using MShop.Broker.Cart.Configuration.RabbitMQ;
 using RabbitMQ.Client;
 using System;
@@ -21,21 +23,30 @@ namespace Mshop.IntegrationTest.Common.Persistence.RabbitMQ
         public RabbitMQPersistence(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _channel = _serviceProvider.GetService<IChannel>();
-            _rabbitMQConfiguration = _serviceProvider.GetService<RabbitMQConfiguration>();
+            var ChannelManager = _serviceProvider.GetService<ChannelManager>().GetChannel();
+            _channel = ChannelManager.GetAwaiter().GetResult();
+            _rabbitMQConfiguration = _serviceProvider.GetRequiredService<IOptions<RabbitMQConfiguration>>().Value;
             _serviceRabbitMQ = _serviceProvider.GetService<ServiceRabbitMQ>();
 
         }
 
-        public async Task<(TEvent, uint)> ReadMessageFromRabbitMQAutoAck<TEvent>() where TEvent : DomainEvent
+        public async Task<(TEvent, uint)> ReadMessageFromRabbitMQAutoAck<TEvent>()
         {
             var options = _rabbitMQConfiguration;
-            var consumer = await _channel.BasicGetAsync(options.QueueName, true);
+            var consumer = await _channel.BasicGetAsync(options.QueueOrder, true);
 
             if (consumer is null) return (default, 0);
 
             var body = consumer.Body.ToArray();
+
             var message = Encoding.UTF8.GetString(body);
+
+            var optionsjson = new JsonSerializerOptions
+            {
+                IncludeFields = true, // Permite a desserialização de campos.
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // Configuração para nomes de propriedades.
+            };
+
             var @event = JsonSerializer.Deserialize<TEvent>(message);
 
             return (@event, consumer.MessageCount);
@@ -45,7 +56,7 @@ namespace Mshop.IntegrationTest.Common.Persistence.RabbitMQ
         {
             var options = _rabbitMQConfiguration;
             
-            var consumer = _channel.BasicGetAsync(options.QueueName, false).Result;
+            var consumer = _channel.BasicGetAsync(options.QueueOrder, false).Result;
 
             if (consumer is null) return;
 
@@ -57,7 +68,7 @@ namespace Mshop.IntegrationTest.Common.Persistence.RabbitMQ
         {
             var options = _rabbitMQConfiguration;
 
-            var QueueName = $"{options.QueueName}.DeadLetter";
+            var QueueName = $"{options.QueueOrder}.DeadLetter";
 
             var consumer = await _channel.BasicGetAsync(QueueName, true);
 

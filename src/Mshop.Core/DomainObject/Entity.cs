@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using Mshop.Core.Message;
 using Mshop.Core.Message;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 
 namespace Mshop.Core.DomainObject
@@ -20,8 +21,9 @@ namespace Mshop.Core.DomainObject
             Id = id;
         }
 
-        private readonly List<DomainEvent> _events = new();
+        protected readonly List<DomainEvent> _events = new();
 
+        [JsonIgnore]
         public IReadOnlyCollection<DomainEvent> Events
             => new ReadOnlyCollection<DomainEvent>(_events);
 

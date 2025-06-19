@@ -157,7 +157,7 @@ namespace Mshop.Core.Test.Domain
         }
 
 
-        public Payment FakerPayment(PaymentMethod paymentMethod, PaymentStatus paymentStatus = PaymentStatus.Pending ,decimal amountt = 0)
+        public Payment FakerPayment(PaymentMethod paymentMethod, PaymentStatus paymentStatus = PaymentStatus.Pending, decimal amountt = 0)
         {
             if(amountt == 0)
                 amountt = fakerStatic.Finance.Amount(1, 100);
@@ -185,5 +185,6 @@ namespace Mshop.Core.Test.Domain
 
             return new Payment(fakerStatic.Finance.Amount(1, 100), PaymentMethod.Pix);
         }
+
     }
 }

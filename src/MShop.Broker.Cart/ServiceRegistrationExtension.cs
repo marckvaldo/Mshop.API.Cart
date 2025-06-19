@@ -15,7 +15,7 @@ namespace MShop.Broker.Cart
 {
     public static class ServiceRegistrationExtension
     {
-        public static void AddRabbitMQ(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddRabbitMQ(this IServiceCollection services, IConfiguration configuration)
         { 
             
             //coloca as configurações RabbitMQ nos serviços da minha applicação para recuperar posteriomente
@@ -66,6 +66,8 @@ namespace MShop.Broker.Cart
 
                 return new RabbitMQProducer(channel, config);
             });
+
+            return services;
 
         }
 

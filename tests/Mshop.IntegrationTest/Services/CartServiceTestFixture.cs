@@ -1,5 +1,7 @@
 ﻿using MongoDB.Driver.Core.Configuration;
+using Mshop.Application.Commons.DTO;
 using Mshop.Core.Test.Domain;
+using Mshop.Domain.Entity;
 using Mshop.Infra.Data.Context;
 using Mshop.Infra.Data.Repository;
 using Mshop.IntegrationTest.Common;
@@ -28,7 +30,7 @@ public class CartServiceTestFixture : IntegrationBaseFixture
         _cartPersistence = new CartPersistence(new MongoDbContext(ConfigurationTests.MongoDb, ConfigurationTests.DataBaseMongoDb));
     }
 
-    public bool PersistirProcutsMysql()
+    public bool PersistirProcutsDataBase()
     {
 
         var category = new CategoryPersistenceDTO { IsActive = true, Id = Guid.NewGuid(), Name = _faker.Commerce.Categories(1)[0] };
@@ -63,6 +65,21 @@ public class CartServiceTestFixture : IntegrationBaseFixture
     public Task<IEnumerable<ProductsPersistenceDTO>> GetAllProductsMysqlAsync()
     {
         return _productPersistenceDabaBase.GetAllProductsAsync();
+    }
+
+
+    public PaymentDTO PaymentToPaymamentDTO(Payment payment)
+    {
+        return new PaymentDTO(
+                payment.Amount,
+                payment.PaymentMethod,
+                payment.Status,
+                payment.Installments,
+                payment.CardToken,
+                payment.BoletoNumber,
+                payment.BoletoDueDate,
+                payment.CreatedAt,
+                payment.UpdatedAt);
     }
 }
 

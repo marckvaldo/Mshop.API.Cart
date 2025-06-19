@@ -24,7 +24,7 @@ namespace MShop.Broker.Cart.Configuration.RabbitMQ
             _channel = channel;
 
             _exchengeOrder = _rabbitmqConfiguration.Value.Exchange;
-            _nameQueueOrder = _rabbitmqConfiguration.Value.QueueName;
+            _nameQueueOrder = _rabbitmqConfiguration.Value.QueueOrder;
             _durable = _rabbitmqConfiguration.Value.Durable;
         }
 

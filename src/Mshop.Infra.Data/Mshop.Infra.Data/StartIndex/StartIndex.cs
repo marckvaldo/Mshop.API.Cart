@@ -24,9 +24,9 @@ namespace Mshop.Infra.Data.StartIndex
         public async Task CreateIndexes()
         {
             // Índice para Cart ID
-            var cartIdIndex = Builders<Cart>.IndexKeys.Ascending(c => c.Id);
+            /*var cartIdIndex = Builders<Cart>.IndexKeys.Ascending(c => c.Id);
             var uniqueOptions = new CreateIndexOptions { Unique = true };
-            await _cartCollection.Indexes.CreateOneAsync(new CreateIndexModel<Cart>(cartIdIndex, uniqueOptions));
+            await _cartCollection.Indexes.CreateOneAsync(new CreateIndexModel<Cart>(cartIdIndex, uniqueOptions));*/
 
             // Índice para Customer ID
             var customerIdIndex = Builders<Cart>.IndexKeys.Ascending(c => c.Customer.Id);

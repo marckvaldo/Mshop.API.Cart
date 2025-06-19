@@ -37,12 +37,47 @@ namespace Mshop.Application.Event
                
                 if(!await handler.HandlerAsync(Event))
                 {
-                    _notification.AddNotifications($"Error in handler {handler.GetType().Name} for event {Event}");
+                    Console.WriteLine($"Error in handler {handler.GetType().Name} for event {Event}");
                     result = false;
                 }
             }
             
             return result;
+        }
+
+        public async Task<bool> PublishAsync<TDomainEvent>(IEnumerable<TDomainEvent> events) where TDomainEvent : DomainEvent
+        {
+
+            var result = true;
+
+            foreach (var entity in events)
+            {
+                var handlerType = _serviceProvider.GetServices(typeof(IDomainEventHandler<>).MakeGenericType(entity.GetType()));
+
+                if (handlerType is null || !((IEnumerable<object>)handlerType).Any())
+                {
+                    Console.WriteLine($"Handler not found for {entity.GetType().Name}");
+                    result = false;
+                    continue;
+                }
+
+                foreach (var handler in (IEnumerable<object>)handlerType)
+                {
+                    var method = handler.GetType().GetMethod("HandlerAsync");
+                    if (method != null)
+                    {
+                        var handlerResult = (Task<bool>)method.Invoke(handler, new object[] { entity });
+                        if (!await handlerResult)
+                        {
+                            Console.WriteLine($"Error in handler {handler.GetType().Name} for event {entity}");
+                            result = false;
+                        }
+                    }
+                }
+            }
+
+            return result;
+            
         }
     }
 }
