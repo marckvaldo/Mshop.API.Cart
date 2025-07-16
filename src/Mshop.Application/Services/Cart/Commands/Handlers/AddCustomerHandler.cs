@@ -7,7 +7,7 @@ using Mshop.Infra.Data.Interface;
 
 namespace Mshop.Application.Services.Cart.Commands.Handlers
 {
-    public class AddCustomerHandler : BaseCommand, IRequestHandler<AddCustomerCommand, bool>
+    public class AddCustomerHandler : BaseCommand, IRequestHandler<AddCustomerToCartCommand, bool>
     {
         private readonly ICartRepository _cartRepository;
         private readonly ICustomerConsumer _customerGPRc;
@@ -20,7 +20,7 @@ namespace Mshop.Application.Services.Cart.Commands.Handlers
             _publishService = publishService ?? throw new ArgumentNullException(nameof(publishService));
         }
 
-        public async Task<bool> Handle(AddCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddCustomerToCartCommand request, CancellationToken cancellationToken)
         {
             var cart = await _cartRepository.GetByIdAsync(request.CartId);
             if (cart is null)

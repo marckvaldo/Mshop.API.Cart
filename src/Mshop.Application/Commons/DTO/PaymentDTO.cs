@@ -9,8 +9,6 @@ namespace Mshop.Application.Commons.DTO
         int? Installments,
         string? CardToken,
         string? BoletoNumber,
-        DateTime? BoletoDueDate,
-        DateTime CreatedAt,
-        DateTime UpdatedAt
+        DateTime? BoletoDueDate
     );
 }

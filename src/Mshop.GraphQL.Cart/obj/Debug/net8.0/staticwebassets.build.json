@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "6a3yI1tlOA8lIN45XfEjHqvFP6Kz6CahF8cVgn6GqKk=",
+  "Source": "Mshop.API.GraphQL.Cart",
+  "BasePath": "_content/Mshop.API.GraphQL.Cart",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

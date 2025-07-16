@@ -1,3 +1,4 @@
+using Mshop.API.Cart.Configuration;
 using Mshop.Application;
 using Mshop.Application.Services.Cart.Commands;
 using Mshop.Infra.Consumer;
@@ -16,7 +17,8 @@ builder.Services.AddConfigurationController()
     .AddCache(builder.Configuration)
     .AddDataBaseAndRepository(builder.Configuration)
     .AddRabbitMQ(builder.Configuration)
-    .AddAplication(builder.Configuration);
+    .AddAplication(builder.Configuration)
+    .AddHealthChecks();
 
 //builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
@@ -25,6 +27,7 @@ var app = builder.Build();
 
 app.CreateIndexMongoDB();
 app.UseDocumentation();
+app.AddMapHealthCheck();
 
 
 // Configure the HTTP request pipeline.

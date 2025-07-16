@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  msho-api-shopping:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile  # Caminho para o seu Dockerfile
+    ports:
+      - "91:8083"        # Porta para o REST API
+      - "92:8084"        # Porta para o GraphQL API
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      
+      # MongoDB
+      ConnectionStrings__MongoDb: "mongodb://admin:admin123@mongodb-dev:27017"
+      ConnectionStrings__DatabaseName: "MshopDb"
+
+      # URLs gRPC
+      Urls__GrpcProduct: "http://mshop-api-product:90"
+      Urls__GrpcCustomer: "https://mshop-api-customer:5002"
+
+      # Redis
+      Redis__Endpoint: "redis-dev:6379"
+      Redis__Password: ""
+      Redis__User: ""
+
+      # RabbitMQ
+      RabbitMQ__HostName: "rabbitmq-dev"
+      RabbitMQ__UserName: "admin"
+      RabbitMQ__Password: "123456"
+      RabbitMQ__Exchange: "orders.Events"
+      RabbitMQ__Port: "5672"
+      RabbitMQ__Vhost: "Mshop"
+      RabbitMQ__QueueOrder: "order.processing.V1"
+      RabbitMQ__Durable: "true"
+
+    networks:
+      - app-catalago
+    container_name: msho-api-shopping
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 254M
+
+networks:
+  app-catalago:
+    external: true

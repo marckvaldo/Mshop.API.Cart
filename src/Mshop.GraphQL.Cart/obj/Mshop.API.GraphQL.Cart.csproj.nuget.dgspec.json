@@ -1,0 +1,580 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.GraphQL.Cart\\Mshop.API.GraphQL.Cart.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Application\\Mshop.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Application\\Mshop.Application.csproj",
+        "projectName": "Mshop.Application",
+        "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Application\\Mshop.Application.csproj",
+        "packagesPath": "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IQ SISTEMAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\MShop.Broker.Cart\\MShop.Broker.Cart.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\MShop.Broker.Cart\\MShop.Broker.Cart.csproj"
+              },
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj"
+              },
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\Mshop.Domain.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\Mshop.Domain.csproj"
+              },
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Consumer\\Mshop.Infra.Consumer.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Consumer\\Mshop.Infra.Consumer.csproj"
+              },
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Data\\Mshop.Infra.Data\\Mshop.Infra.Data.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Data\\Mshop.Infra.Data\\Mshop.Infra.Data.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.1.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\MShop.Broker.Cart\\MShop.Broker.Cart.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\MShop.Broker.Cart\\MShop.Broker.Cart.csproj",
+        "projectName": "MShop.Broker.Cart",
+        "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\MShop.Broker.Cart\\MShop.Broker.Cart.csproj",
+        "packagesPath": "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\MShop.Broker.Cart\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IQ SISTEMAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[7.1.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj",
+        "projectName": "Mshop.Core",
+        "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj",
+        "packagesPath": "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IQ SISTEMAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[11.3.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\Mshop.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\Mshop.Domain.csproj",
+        "projectName": "Mshop.Domain",
+        "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\Mshop.Domain.csproj",
+        "packagesPath": "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IQ SISTEMAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[11.3.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.GraphQL.Cart\\Mshop.API.GraphQL.Cart.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.GraphQL.Cart\\Mshop.API.GraphQL.Cart.csproj",
+        "projectName": "Mshop.API.GraphQL.Cart",
+        "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.GraphQL.Cart\\Mshop.API.GraphQL.Cart.csproj",
+        "packagesPath": "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.GraphQL.Cart\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IQ SISTEMAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Application\\Mshop.Application.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Application\\Mshop.Application.csproj"
+              },
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "HotChocolate.AspNetCore": {
+              "target": "Package",
+              "version": "[15.1.7, )"
+            },
+            "Swashbuckle.NodaTime.AspNetCore": {
+              "target": "Package",
+              "version": "[5.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Consumer\\Mshop.Infra.Consumer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Consumer\\Mshop.Infra.Consumer.csproj",
+        "projectName": "Mshop.Infra.Consumer",
+        "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Consumer\\Mshop.Infra.Consumer.csproj",
+        "packagesPath": "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Consumer\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IQ SISTEMAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Core\\Mshop.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.30.2, )"
+            },
+            "Grpc.Net.Client": {
+              "target": "Package",
+              "version": "[2.70.0, )"
+            },
+            "Grpc.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.70.0, )"
+            },
+            "NRedisStack": {
+              "target": "Package",
+              "version": "[0.13.1, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[8.5.2, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.8.22, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Data\\Mshop.Infra.Data\\Mshop.Infra.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Data\\Mshop.Infra.Data\\Mshop.Infra.Data.csproj",
+        "projectName": "Mshop.Infra.Data",
+        "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Data\\Mshop.Infra.Data\\Mshop.Infra.Data.csproj",
+        "packagesPath": "C:\\Users\\IQ SISTEMAS\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Infra.Data\\Mshop.Infra.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IQ SISTEMAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\Mshop.Domain.csproj": {
+                "projectPath": "C:\\Users\\IQ SISTEMAS\\Documents\\mShopping\\new\\Mshopping\\MShop.API.Cart\\src\\Mshop.Domain\\Mshop.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

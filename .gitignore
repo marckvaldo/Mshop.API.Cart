@@ -38,6 +38,10 @@ tests/Mshop.IntegrationTest/.vs/
 tests/Mshop.IntegrationTest/bin/
 tests/Mshop.IntegrationTest/obj/
 
+tests/Mshop.E2ETests/.vs/
+tests/Mshop.E2ETests/bin/
+tests/Mshop.E2ETests/obj/
+
 
 
 

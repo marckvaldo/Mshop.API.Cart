@@ -1,6 +1,8 @@
 ﻿using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Mshop.API.Cart.Requests.V1.Cart;
+using Mshop.Application.Commons.DTO;
 using Mshop.Application.Commons.Response;
 using Mshop.Application.Services.Cart.Commands;
 using Mshop.Application.Services.Cart.Queries;
@@ -42,84 +44,106 @@ namespace MShop.API.Cart.Controllers.v1
             return CustomResponse(result);
         }
 
-        [HttpPost("items")]
+        [HttpPost("{cartId}/items")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> AddItemCart(AddItemToCartCommand request, CancellationToken cancellationToken)
+        public async Task<ActionResult<bool>> AddItemCart(Guid cartId,[FromBody] AddItemToCartRequest request, CancellationToken cancellationToken)
         {
-            if (ModelState.IsValid) CustomResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+                
+            var command = new AddItemToCartCommand(cartId, request.ProductId, request.Quantity);
+            var result = await _mediator.Send(command, cancellationToken);
+            return CustomResponse(result);
+        }
 
+        [HttpDelete("{cartId}/items/{productId}")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> RemoverItem(Guid cartId, Guid productId, CancellationToken cancellationToken)
+        {
+            RemoveItemFromCartCommand request = new RemoveItemFromCartCommand(cartId,productId);
             var result = await _mediator.Send(request, cancellationToken);
             return CustomResponse(result);
         }
 
-        [HttpDelete("items")]
+        [HttpPut("{cartId}/items/{productId}/LessQuantity")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> RemoverItem(RemoveItemFromCartCommand request, CancellationToken cancellationToken)
+        public async Task<ActionResult<bool>> LessQuantity(Guid cartId, Guid productId, [FromBody] LessQuantityItemRequest request, CancellationToken cancellationToken)
         {
-            if (ModelState.IsValid) CustomResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var result = await _mediator.Send(request, cancellationToken);
+            var command = new RemoveQuantityFromCommand(cartId, productId, request.Quantity);
+            var result = await _mediator.Send(command, cancellationToken);
             return CustomResponse(result);
         }
 
-        [HttpPut("items/quantity")]
+        [HttpPost("{cartId}/customer")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> RemoverQuantity(RemoveQuantityFromCommand request, CancellationToken cancellationToken)
+        public async Task<ActionResult<bool>> AddCustomer(Guid cartId, [FromBody] AddCustomerToCartRequest request, CancellationToken cancellationToken)
         {
-            if (ModelState.IsValid) CustomResponse(ModelState);
-
-            var result = await _mediator.Send(request, cancellationToken);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            var command = new AddCustomerToCartCommand(cartId, request.CustomerId);
+            var result = await _mediator.Send(command, cancellationToken);
             return CustomResponse(result);
         }
 
-        [HttpPost("customer")]
+        [HttpPost("{cartId}/addresses")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> AddCustomer(AddCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<ActionResult<bool>> AddAddress(Guid cartId, [FromBody] AddAddressToCartRequest request, CancellationToken cancellationToken)
         {
-            if (ModelState.IsValid) CustomResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var result = await _mediator.Send(request, cancellationToken);
+            var command = new AddAddressToCartCommand(cartId, 
+                    new AddressDTO(
+                        request.Street, 
+                        request.Number,
+                        request.Complement,
+                        request.Neighborhood,
+                        request.City,request.State, 
+                        request.PostalCode,
+                        request.Country));
+
+            var result = await _mediator.Send(command, cancellationToken);
             return CustomResponse(result);
         }
 
-        [HttpPost("addresses")]
+        [HttpPost("{cartId}/payments")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> AddAddress(AddAddressToCartCommand request, CancellationToken cancellationToken)
+        public async Task<ActionResult<bool>> AddPayment(Guid cartId, [FromBody] AddPaymentToCartRequest request, CancellationToken cancellationToken)
         {
-            if (ModelState.IsValid) CustomResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var result = await _mediator.Send(request, cancellationToken);
+            var command = new AddPaymentToCartCommand(cartId,
+                new PaymentDTO(
+                    request.Amount,
+                    request.PaymentMethod,
+                    Mshop.Domain.Entity.PaymentStatus.Pending,
+                    request.Installments,
+                    request.CardToken,
+                    request.BoletoNumber,
+                    request.BoletoDueDate
+                    ));
+
+            var result = await _mediator.Send(command, cancellationToken);
             return CustomResponse(result);
         }
 
-        [HttpPost("payments")]
+        [HttpGet("{cartId}/checkout")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> AddPayment(AddPaymentCommand request, CancellationToken cancellationToken)
+        public async Task<ActionResult<bool>> Checkout(Guid cartId, CancellationToken cancellationToken)
         {
             if (ModelState.IsValid) CustomResponse(ModelState);
-
-            var result = await _mediator.Send(request, cancellationToken);
+            var command = new CheckoutCommand(cartId);
+            var result = await _mediator.Send(command, cancellationToken);
             return CustomResponse(result);
         }
 
-        [HttpPost("checkout")]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> Checkout(CheckoutCommand request, CancellationToken cancellationToken)
-        {
-            if (ModelState.IsValid) CustomResponse(ModelState);
-
-            var result = await _mediator.Send(request, cancellationToken);
-            return CustomResponse(result);
-        }
-
-        [HttpDelete("cart/{cartId:guid}")]
+        [HttpDelete("{cartId:guid}/items")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> ClearCart(Guid cartId, CancellationToken cancellationToken)

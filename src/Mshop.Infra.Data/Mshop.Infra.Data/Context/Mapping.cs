@@ -22,6 +22,8 @@ namespace Mshop.Infra.Data.Context
                     cm.AutoMap();
                     cm.MapIdMember(c => c.Id)
                         .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+                   
                 });
             }
 
@@ -32,6 +34,7 @@ namespace Mshop.Infra.Data.Context
                     cm.AutoMap();
                     cm.MapMember(c => c.CategoryId)
                         .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
                 });
             }
 

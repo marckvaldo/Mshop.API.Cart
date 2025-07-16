@@ -40,6 +40,5 @@ namespace Mshop.Domain.Entity
         {
             Address = adress;
         }
-
     }
 }

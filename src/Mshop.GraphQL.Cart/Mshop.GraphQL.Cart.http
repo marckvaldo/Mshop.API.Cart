@@ -1,0 +1,6 @@
+@Mshop.GraphQL.Cart_HostAddress = http://localhost:5124
+
+GET {{Mshop.GraphQL.Cart_HostAddress}}/CartQueries/
+Accept: application/json
+
+###

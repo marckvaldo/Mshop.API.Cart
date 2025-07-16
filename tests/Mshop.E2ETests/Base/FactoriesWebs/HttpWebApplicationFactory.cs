@@ -11,6 +11,8 @@ namespace Mshop.E2ETests.Base.FactoriesWebs
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment); //setando globalmente
             builder.UseEnvironment(environment);
 
+
+
             // You can override this method to configure the web host for your tests.
             // For example, you can set up a test database or mock services.
             base.ConfigureWebHost(builder);

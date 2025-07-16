@@ -68,19 +68,19 @@ namespace Mshop.Domain.Entity
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void RemoveQuantity(Guid productId)
+        public void RemoveQuantity(Guid productId, decimal quantity = 1)
         {
             var item = Products.FirstOrDefault(i => i.Id == productId);
             if (item != null)
             {
-                if (item.Quantity == 1)
+                if (item.Quantity == 1 || item.Quantity < quantity || item.Quantity == quantity)
                 {
                     Products.Remove(item);
                     RegisterEvent(new OrderItemRemovedEvent(this));
                 }
                 else
                 {
-                    item.UpdateQuantity(item.Quantity - 1);
+                    item.UpdateQuantity(item.Quantity - quantity);
                     RegisterEvent(new OrderItemModifiedEvent(this));
                 }
             }
@@ -90,6 +90,9 @@ namespace Mshop.Domain.Entity
 
         public void ClearCart()
         {
+            if (Status == CartStatus.CheckoutCompleted)
+                return;
+
             Products.Clear();
             UpdatedAt = DateTime.UtcNow;
             RegisterEvent(new OrderItensRemovedEvent(this));

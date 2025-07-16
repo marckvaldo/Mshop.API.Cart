@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Mshop.Infra.Data.Context;
 using Mshop.Infra.Data.Interface;
 using Mshop.Infra.Data.Repository;
-using Mshop.Infra.Data.StartIndex;
 
 namespace Mshop.Infra.Data
 {
@@ -14,7 +12,7 @@ namespace Mshop.Infra.Data
     {
         public static IServiceCollection AddDataBaseAndRepository(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("MongoDb");
+            var connectionString = configuration["ConnectionStrings:MongoDb"];
             var dataBase = configuration["ConnectionStrings:DatabaseName"];
 
             Mapping.MapConfiguration();

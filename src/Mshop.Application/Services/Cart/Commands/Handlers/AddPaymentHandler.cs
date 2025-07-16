@@ -13,7 +13,7 @@ using Mshop.Application.Commons.DTO;
 
 namespace Mshop.Application.Services.Cart.Commands.Handlers
 {
-    public class AddPaymentHandler : BaseCommand, IRequestHandler<AddPaymentCommand, bool>
+    public class AddPaymentHandler : BaseCommand, IRequestHandler<AddPaymentToCartCommand, bool>
     {
         private readonly ICartRepository _cartRepository;
         private readonly IDomainEventPublisher _publishService;
@@ -27,7 +27,7 @@ namespace Mshop.Application.Services.Cart.Commands.Handlers
             _publishService = publishService;
         }
 
-        public async Task<bool> Handle(AddPaymentCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddPaymentToCartCommand request, CancellationToken cancellationToken)
         {
             var cart = await _cartRepository.GetByIdAsync(request.CartId);
             if (cart is null)

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Mshop.GraphQL.Cart.props" />
+</Project>

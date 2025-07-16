@@ -4,7 +4,8 @@ namespace Mshop.Application.Services.Cart.Commands
 {
     public record class RemoveQuantityFromCommand(
         Guid CartId,
-        Guid ProductId) : IRequest<bool>
+        Guid ProductId,
+        decimal Quantity) : IRequest<bool>
     {
     }
 }

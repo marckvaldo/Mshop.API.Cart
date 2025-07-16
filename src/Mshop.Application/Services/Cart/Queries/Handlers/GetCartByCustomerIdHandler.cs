@@ -28,7 +28,8 @@ namespace Mshop.Application.Services.Cart.Queries.Handlers
             return Result<CartResponse>.Success(new CartResponse(
                cart.Id,
                CartResponse.ProductTOProductDTO(cart.Products),
-               CartResponse.CustomerTOCustomerDTO(cart.Customer)));
+               CartResponse.CustomerTOCustomerDTO(cart.Customer), 
+               CartResponse.PaymentToPaymentDTO(cart.Payments)));
 
         }
     }

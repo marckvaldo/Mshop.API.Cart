@@ -27,7 +27,7 @@ namespace Mshop.Application.Services.Cart.Commands.Handlers
                 Notificar("Não foi possivel encontrar o carrinho de compras");
                 return false;
             }
-            cart.RemoveQuantity(request.ProductId);
+            cart.RemoveQuantity(request.ProductId, request.Quantity);
             cart.IsValid(Notifications);
             if (TheareErrors()) return false;
 

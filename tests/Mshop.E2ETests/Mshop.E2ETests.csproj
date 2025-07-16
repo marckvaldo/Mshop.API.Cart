@@ -15,19 +15,18 @@
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.12" />
+	<PackageReference Include="MySql.Data" Version="9.3.0" />
+	<PackageReference Include="Dapper" Version="2.1.66" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MShop.API.Cart\Mshop.API.Cart.csproj" />
+    <ProjectReference Include="..\..\src\Mshop.GraphQL.Cart\Mshop.API.GraphQL.Cart.csproj" />
     <ProjectReference Include="..\Mshop.Core.Test\Mshop.Core.Test.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="API\" />
   </ItemGroup>
 
 </Project>
