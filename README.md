@@ -1,4 +1,4 @@
-# API de Catalogo de Produtos
+# Mshop Shopping (Cart)
 
 <div style="background-color: #f0f0f0; height:20vh; display: flex; flex-direction: row; justify-content: center;">
 <img src="https://github.com/marckvaldo/Mshop.Compose/blob/main/Imagens/Mshop.Shopping.png">
@@ -53,22 +53,22 @@ $ docker-compose up -d
 <img src="https://github.com/marckvaldo/Mshop.API.Product/blob/main/images/Images.jpg">
 
 ### 🛠 Settings
-Todas as configurações no ambiente de desenvolvimento estão em Mshop.API.Product\src\MShop.Calalog.API\appsettings.Development.json
+All settings in the development environment are in appsettings.Development.json.  <br/>
+If you're just going to runthe project for testing in Docker, the settings are in the docker-composer.yml file.
+
 
 ### 🛠 Technologies
-
-As seguintes ferramentas foram usadas na construção do projeto:
+the following tools were used in building the project;
 
 - [ASP.net](https://dotnet.microsoft.com/en-us/apps/aspnet)
 - [Mysql](https://www.mysql.com/)
 - [RabbitMQ](https://www.rabbitmq.com/)
 - [Docker](https://www.docker.com/)
-- [Kibana](https://www.elastic.co/pt/kibana).
-- [Elasticsearch](https://www.elastic.co/pt/elasticsearch).
+- [Redis](https://redis.io/resources/redisearch-a-high-performance-search-engine-as-a-redis-module/).
 - [GraphQL](https://graphql.org/).
 
 
-#📝 Licença
+#📝 License
 this project is under the MIT license.
 
 Made with ❤️ by Marckvaldo Wallas 👋🏽 Contact me by (marckvaldo@hotmail.com, marckvaldowallas@gmail.com) <br/>
