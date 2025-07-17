@@ -68,7 +68,7 @@ the following tools were used in building the project;
 - [GraphQL](https://graphql.org/).
 
 
-#📝 License
+#📝 License <br/>
 this project is under the MIT license.
 
 Made with ❤️ by Marckvaldo Wallas 👋🏽 Contact me by (marckvaldo@hotmail.com, marckvaldowallas@gmail.com) <br/>
